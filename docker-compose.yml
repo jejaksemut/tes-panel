@@ -1,0 +1,60 @@
+version: "3"
+
+services:
+  # Pterodactyl Panel
+  panel:
+    image: pterodactyl/panel:latest
+    container_name: pterodactyl-panel
+    restart: unless-stopped
+    environment:
+      - APP_URL=http://your-panel-url.com # Ganti dengan URL panel Anda
+      - APP_KEY=some_random_string # Ganti dengan kunci aplikasi Anda, bisa menggunakan artisan key:generate
+      - DB_HOST=db
+      - DB_DATABASE=pterodactyl
+      - DB_USERNAME=pterodactyl
+      - DB_PASSWORD=pterodactyl_password
+    ports:
+      - "80:80" # Port untuk panel Pterodactyl
+    volumes:
+      - ./panel:/var/www/pterodactyl
+    networks:
+      - pterodactyl-network
+    depends_on:
+      - db
+    command: ["php", "/var/www/pterodactyl/artisan", "serve"]
+
+  # Pterodactyl Database
+  db:
+    image: mysql:5.7
+    container_name: pterodactyl-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_DATABASE=pterodactyl
+      - MYSQL_USER=pterodactyl
+      - MYSQL_PASSWORD=pterodactyl_password
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - pterodactyl-network
+
+  # Pterodactyl Wings Daemon
+  wings:
+    image: pterodactyl/wings:latest
+    container_name: pterodactyl-wings
+    restart: unless-stopped
+    environment:
+      - PANEL_URL=http://your-panel-url.com # Ganti dengan URL panel Anda
+      - PANEL_API_KEY=your_api_key # API Key untuk Wings yang Anda dapatkan dari panel
+      - NODE_ID=your_node_id # Ganti dengan ID Node yang didapat dari panel
+      - DAEMON_LISTEN=0.0.0.0:8080 # IP dan port yang akan digunakan oleh Wings
+    ports:
+      - "8080:8080" # Port Wings
+    volumes:
+      - ./wings:/etc/pterodactyl
+    networks:
+      - pterodactyl-network
+
+networks:
+  pterodactyl-network:
+    driver: bridge
