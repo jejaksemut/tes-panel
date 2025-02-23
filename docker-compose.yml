@@ -7,7 +7,7 @@ services:
     container_name: pterodactyl-panel
     restart: unless-stopped
     environment:
-      - APP_URL=http://your-panel-url.com # Ganti dengan URL panel Anda
+      - APP_URL=http://sakaiding.free.nf # Ganti dengan URL panel Anda
       - APP_KEY=some_random_string # Ganti dengan kunci aplikasi Anda, bisa menggunakan artisan key:generate
       - DB_HOST=db
       - DB_DATABASE=pterodactyl
@@ -44,7 +44,7 @@ services:
     container_name: pterodactyl-wings
     restart: unless-stopped
     environment:
-      - PANEL_URL=http://your-panel-url.com # Ganti dengan URL panel Anda
+      - PANEL_URL=http://sakaiding.free.nf # Ganti dengan URL panel Anda
       - PANEL_API_KEY=your_api_key # API Key untuk Wings yang Anda dapatkan dari panel
       - NODE_ID=your_node_id # Ganti dengan ID Node yang didapat dari panel
       - DAEMON_LISTEN=0.0.0.0:8080 # IP dan port yang akan digunakan oleh Wings
@@ -58,3 +58,4 @@ services:
 networks:
   pterodactyl-network:
     driver: bridge
+
